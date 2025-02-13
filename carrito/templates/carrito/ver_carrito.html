@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block title %}Carrito de Compras{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="text-center my-4">Carrito de Compras</h1>
+    {% if carrito %}
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Producto</th>
+                    <th>Precio</th>
+                    <th>Cantidad</th>
+                    <th>Total</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in carrito %}
+                    <tr>
+                        <td>{{ item.producto.nombre }}</td>
+                        <td>${{ item.producto.precio }}</td>
+                        <td>{{ item.cantidad }}</td>
+                        <td>${{ item.subtotal }}</td>
+                        <td>
+                            <a href="{% url 'agregar_producto' item.producto.id %}" class="btn btn-success btn-sm">+</a>
+                            <a href="{% url 'eliminar_producto' item.producto.id %}" class="btn btn-danger btn-sm">-</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        
+        <!-- TOTAL -->
+        <h3 class="text-end">Total: ${{ total }}</h3>
+
+        <!-- Botones de acción -->
+        <div class="d-flex justify-content-between">
+            <a href="/productos/" class="btn btn-primary">Seguir Comprando</a>
+            <a href="{% url 'finalizar_compra' %}" class="btn btn-success">Finalizar Compra</a>  <!-- 📌 Botón agregado -->
+        </div>
+
+    {% else %}
+        <p class="text-center">El carrito está vacío.</p>
+        <a href="/productos/" class="btn btn-secondary">Ir al Catálogo</a>
+    {% endif %}
+</div>
+{% endblock %}
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Carrito de Compras</title>
+</head>
+<body>
+    <h1>Carrito de Compras</h1>
+    <ul>
+        {% for item in carrito %}
+            <li>{{ item.producto.nombre }} - ${{ item.producto.precio }} x {{ item.cantidad }}
+                <a href="{% url 'agregar_producto' item.producto.id %}">Agregar</a>
+                <a href="{% url 'eliminar_producto' item.producto.id %}">Eliminar</a>
+            </li>
+        {% empty %}
+            <li>El carrito está vacío</li>
+        {% endfor %}
+    </ul>
+    <h2>Total: ${{ total }}</h2>
+    <a href="/productos/">Seguir comprando</a>
+</body>
+</html>
